@@ -1,5 +1,7 @@
 import 'package:feen_mobile/base/res/styles/app_styles.dart';
+import 'package:feen_mobile/screens/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'dart:ui';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -9,8 +11,10 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+
   final appScreens = [
-    const Center(child: Text("Home")),
+    HomeScreen(),
     // Statistics screen suggestion: show stats and charts
     Center(
       child: Column(
@@ -59,6 +63,76 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      extendBodyBehindAppBar: true,
+      appBar: _selectedIndex == 0
+          ? PreferredSize(
+              preferredSize: const Size.fromHeight(kToolbarHeight),
+              child: ClipRRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+                  child: AppBar(
+                    backgroundColor: Colors.white.withOpacity(0.18),
+                    elevation: 0,
+                    automaticallyImplyLeading: false,
+                    leadingWidth: 56,
+                    leading: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: const CircleAvatar(
+                        backgroundImage: AssetImage('assets/avatar.png'),
+                        radius: 18,
+                      ),
+                    ),
+                    title: const Text(
+                      'فين',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 32,
+                        letterSpacing: 2,
+                      ),
+                    ),
+                    centerTitle: true,
+                    actions: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: IconButton(
+                          icon: const Icon(Icons.tune, color: Colors.black),
+                          onPressed: () {
+                            _scaffoldKey.currentState?.openEndDrawer();
+                          },
+                        ),
+                      ),
+                    ],
+                    toolbarHeight: kToolbarHeight,
+                  ),
+                ),
+              ),
+            )
+          : null,
+      endDrawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            const DrawerHeader(
+              decoration: BoxDecoration(color: Colors.blue),
+              child: Text('Drawer Header'),
+            ),
+            ListTile(
+              title: const Text('Item 1'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Item 2'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
       body: appScreens[_selectedIndex],
       bottomNavigationBar: ClipRRect(
         borderRadius: const BorderRadius.only(
@@ -70,7 +144,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
           type: BottomNavigationBarType.fixed,
           onTap: _onItemTapped,
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.white,
+          selectedItemColor: AppStyles.secondaryColor,
           unselectedItemColor: Colors.white,
           showSelectedLabels: true,
           showUnselectedLabels: true,
