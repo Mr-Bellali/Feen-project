@@ -15,8 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Column(
         children: [
-          // Add space to avoid AppBar
-          const SizedBox(height: kToolbarHeight + 20),
+          SizedBox(height: 12,),
           // ListView with 5 Post widgets
           Expanded(
             child: ListView.builder(
